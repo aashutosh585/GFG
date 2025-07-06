@@ -12,6 +12,31 @@ class Solution {
         
         return false;
     }
+    
+    bool bfs(int i,vector<vector<int>>& adj,vector<bool>&visited){
+        queue<pair<int,int>>pq;
+        pq.push({i,-1});
+        visited[i]=1;
+        
+        while(!pq.empty()){
+            pair<int,int> a=pq.front();
+            int node=a.first;
+            int prev=a.second;
+            pq.pop();
+            
+            for(int it:adj[node]){
+                if(prev==it) continue;
+                if(visited[it]) return true;
+                if(!visited[it]){
+                    visited[it]=1;
+                    pq.push({it,node});
+                } 
+            }
+        }
+        
+        return false;
+    }
+    
     bool isCycle(int V, vector<vector<int>>& edges) {
         // Code her
         vector<bool>visited(V,0);
@@ -23,11 +48,21 @@ class Solution {
             adj[edges[i][1]].push_back(edges[i][0]);
         }
         
+        // for(int i=0;i<V;i++){
+        //     if(!visited[i] && dfs(i,-1, adj, visited)){
+        //         return true;
+        //     }
+        // }
+        
         for(int i=0;i<V;i++){
-            if(!visited[i] && dfs(i,-1, adj, visited)){
+            queue<pair<int,int>>pq;
+            pq.push({i,-1});
+            if(!visited[i] && bfs(i, adj, visited)){
                 return true;
             }
         }
+        
+        
         
         return false;
         
