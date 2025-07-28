@@ -3,30 +3,30 @@ class Solution {
     // Function to return Breadth First Traversal of given graph.
     vector<int> bfs(vector<vector<int>> &adj) {
         // Code here
-        int e=adj.size();
-        
+        int n=adj.size();
+        queue<int>q;
+        vector<bool>visited(n,false);
         vector<int>ans;
-        vector<bool>visited(e,0);
-        queue<int>pq;
         
-        if(e==0) return ans;
-        
-        pq.push(0);
-        while(!pq.empty()){
-            int x = pq.front();
-            pq.pop();
+        q.push(0);
+        while(!q.empty()){
+            int node =q.front();
+            q.pop();
             
-            if(!visited[x])
-            ans.push_back(x);
+            if(!visited[node])
+            ans.push_back(node);
             
-            visited[x]=1;
+            visited[node]=true;
             
-            for(auto it:adj[x]){
-                if(!visited[it])
-                pq.push(it);
+            for(auto it :adj[node]){
+                if(!visited[it]){
+                    q.push(it);
+                }
             }
         }
         
         return ans;
+        
+        
     }
 };
