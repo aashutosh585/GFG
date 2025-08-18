@@ -1,67 +1,29 @@
-//{ Driver Code Starts
-
-#include <bits/stdc++.h>
-using namespace std;
-
-
-// } Driver Code Ends
-
 class Solution {
   public:
-    bool solve(int idx,int sum,vector<int>&arr){
-        
-        if(idx==arr.size() || sum-arr[idx]<0) return false;
-        
-        if(sum-arr[idx]==0) return true;
-        
-        bool flag=false;
-        for(int i=idx;i<arr.size();i++){
-            flag=solve(i+1,sum-arr[idx],arr);
-            if(flag) return flag;
-        }
-        return flag;
-        
-    }
     bool isSubsetSum(vector<int>& arr, int sum) {
         // code here
-        bool flag=false;
-        for(int i=0;i<arr.size();i++){
-            flag=solve(i,sum,arr);
-            if(flag) return flag;
+        int n = arr.size();
+        vector<bool>dp1(sum + 1, false);
+        vector<bool>dp2(sum + 1, false);
+        dp1[0] =true;
+        dp2[0]=true;
+
+        if (arr[0] <= sum) {
+            dp1[arr[0]] = true;
         }
-        return flag;
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= sum; j++) {
+                bool notTake = dp1[j];
+                bool take = false;
+                if (arr[i] <= j) {
+                    take = dp1[j - arr[i]];
+                }
+                dp2[j] = take || notTake;
+            }
+            dp1=dp2;
+        }
+
+        return dp1[sum];
     }
 };
-
-
-//{ Driver Code Starts.
-
-int main() {
-
-    int t;
-    cin >> t;
-    cin.ignore();
-    while (t--) {
-        vector<int> arr;
-        string input;
-        getline(cin, input);
-        stringstream ss(input);
-        int number;
-        while (ss >> number) {
-            arr.push_back(number);
-        }
-        int sum;
-        cin >> sum;
-        cin.ignore();
-
-        Solution ob;
-        if (ob.isSubsetSum(arr, sum))
-            cout << "true" << endl;
-        else
-            cout << "false" << endl;
-        cout << "~" << endl;
-    }
-    return 0;
-}
-
-// } Driver Code Ends
