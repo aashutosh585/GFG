@@ -1,70 +1,31 @@
 class Solution {
   public:
-    bool dfs(int node,int prev,vector<vector<int>>& adj,vector<bool>&visited){
-        visited[node]=1;
-    
-       
-        for(auto it:adj[node]){
-            if(prev == it) continue;
-            if(visited[it]) return true;
-            if(dfs(it,node,adj,visited)) return true;
+  
+    bool dfs(int u, vector<vector<int>>&adj, vector<bool>&visit, int pa){
+        visit[u]=true;
+        
+        for(auto &v:adj[u]){
+            if(v==pa) continue;
+            if(visit[v]) return true;
+            if(dfs(v,adj,visit,u)) return true;
         }
         
         return false;
     }
     
-    bool bfs(int i,vector<vector<int>>& adj,vector<bool>&visited){
-        queue<pair<int,int>>pq;
-        pq.push({i,-1});
-        visited[i]=1;
-        
-        while(!pq.empty()){
-            pair<int,int> a=pq.front();
-            int node=a.first;
-            int prev=a.second;
-            pq.pop();
-            
-            for(int it:adj[node]){
-                if(prev==it) continue;
-                if(visited[it]) return true;
-                if(!visited[it]){
-                    visited[it]=1;
-                    pq.push({it,node});
-                } 
-            }
-        }
-        
-        return false;
-    }
-    
-    bool isCycle(int V, vector<vector<int>>& edges) {
-        // Code her
-        vector<bool>visited(V,0);
-        
+    bool isCycle(int V, vector<vector<int>>& ed) {
+        // Code here
         vector<vector<int>>adj(V);
-        
-        for(int i=0;i<edges.size();i++){
-            adj[edges[i][0]].push_back(edges[i][1]);
-            adj[edges[i][1]].push_back(edges[i][0]);
+        for(int i=0;i<ed.size();i++){
+            adj[ed[i][0]].push_back(ed[i][1]);
+            adj[ed[i][1]].push_back(ed[i][0]);
         }
         
-        // for(int i=0;i<V;i++){
-        //     if(!visited[i] && dfs(i,-1, adj, visited)){
-        //         return true;
-        //     }
-        // }
-        
+        vector<bool>visit(V,false);
         for(int i=0;i<V;i++){
-            queue<pair<int,int>>pq;
-            pq.push({i,-1});
-            if(!visited[i] && bfs(i, adj, visited)){
-                return true;
-            }
+            if(!visit[i] && dfs(i,adj,visit,-1)) return true;
         }
-        
-        
         
         return false;
-        
     }
 };
