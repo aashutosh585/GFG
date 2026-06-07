@@ -1,35 +1,43 @@
 class Solution {
   public:
-    
-    bool dfs(int node,vector<vector<int>>&adj,vector<bool>&path,vector<int>&visited){
-        path[node]=1;
-        visited[node]=1;
+  int n;
+  
+  
+    bool dfs(int i, vector<vector<int>> &adj, vector<bool> &vis, vector<bool> cvis){
+        if(n==i) return false;
         
-        for(auto it:adj[node]){
-            if(path[it]) return 1;
-            if(!visited[it]) continue;
-            if(dfs(it,adj,path,visited)) return 1;
+        vis[i]=true;
+        cvis[i]=true;
+        
+        for(auto &it:adj[i]){
+            if(cvis[it]) return true;
+            
+            if(!vis[it]){
+                if(dfs(it,adj,vis,cvis)) return true;
+            }
         }
         
-        path[node]=0;
         
+        cvis[i]=false;
         return false;
+        
     }
-    
     bool isCyclic(int V, vector<vector<int>> &edges) {
         // code here
-        vector<bool>path(V,0);
-        vector<vector<int> >adj(V);
-        vector<int>visited(V,0);
-        
-        for(int i=0;i<edges.size();i++){
-            adj[edges[i][0]].push_back(edges[i][1]);
+        n=V;
+        vector<vector<int>> adj(V);
+        for(auto &it: edges){
+            adj[it[0]].push_back(it[1]);
         }
         
+        vector<bool>vis(V,false), cvis(V, false);
         for(int i=0;i<V;i++){
-            if(!visited[i] && dfs(i,adj,path,visited))
-            return true;
+            if(!vis[i]){
+                if(dfs(i,adj, vis, cvis)) return true;
+            }
         }
+        
         return false;
+        
     }
 };
